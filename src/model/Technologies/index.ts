@@ -1,12 +1,9 @@
-import User from "../User";
-import { TechnologyTypes, TechnologyUpdateTypes } from "./types.technology";
 import { randomUUID } from "crypto";
+import User from "../User";
+import { TechnologyUpdateTypes } from "./types.technology";
 
 class Technologies {
-	public add(
-		username: string,
-		technologyData: TechnologyUpdateTypes
-	) {
+	public add(username: string, technologyData: TechnologyUpdateTypes) {
 		const newId = randomUUID();
 		const newTechnologyData = {
 			id: newId,
@@ -18,6 +15,7 @@ class Technologies {
 
 		let userData = User.get(username);
 		userData.technologies.push(newTechnologyData);
+		console.log(userData);
 		User.set(username, userData);
 
 		return newTechnologyData;
@@ -59,12 +57,14 @@ class Technologies {
 
 	public exists(username: string, id: string) {
 		const userData = User.get(username);
-		return userData.technologies.some(technology => technology.id === id);
+		return userData.technologies.some((technology) => technology.id === id);
 	}
 
 	public delete(username: string, id: string) {
 		let userData = User.get(username);
-		userData.technologies = userData.technologies.filter(v => v.id !== id);
+		userData.technologies = userData.technologies.filter(
+			(v) => v.id !== id
+		);
 		User.set(username, userData);
 		return userData.technologies;
 	}

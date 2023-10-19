@@ -7,8 +7,7 @@ export type UserTypes = {
 	technologies: Array<TechnologyTypes>;
 };
 
-export type UserUpdateTypes = {
-    name: string;
-    username: string;
-	technologies: Array<TechnologyTypes>;
+export type UserPostTypes = {
+	name: string;
+	username: string;
 };

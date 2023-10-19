@@ -1,7 +1,7 @@
-import express from 'express';
-import { userRouter } from './router/User';
-import { technologyRouter } from './router/Technology';
-import { checkExistsUserAccount } from './middlewares/index';
+import express from "express";
+import { checkExistsUserAccount } from "./middlewares/index";
+import { technologyRouter } from "./router/Technology";
+import { userRouter } from "./router/User";
 
 const app = express();
 app.use(express.json());
