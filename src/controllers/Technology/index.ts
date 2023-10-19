@@ -5,13 +5,9 @@ import Technologies from "../../model/Technologies";
 class TechnologyController {
   public async getAllTechnologiesByUsername(req: Request, res: Response) {
     try {
-        const username = req.header("username");
-        if(User.exists(username)) {
-            const allTechnologiesData = Technologies.getByUser(username);
-            res.status(200).json(allTechnologiesData);
-        } else {
-            res.status(400).send("Este username nao existe.");
-        }
+        const username = req.header("username") ?? "";
+        const allTechnologiesData = Technologies.getByUser(username);
+        res.status(200).json(allTechnologiesData);
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: "Erro no servidor." });
@@ -20,14 +16,10 @@ class TechnologyController {
 
   public async create(req: Request, res: Response) {
     try {
-        const username = req.header("username");
+        const username = req.header("username") ?? "";
         const technologyData = req.body;
-        if(User.exists(username)) {
-            const userTechnologyDataDTO = Technologies.add(username, technologyData);
-            res.status(201).json(userTechnologyDataDTO);
-        } else {
-            res.status(400).send("Este username nao existe.");
-        }
+        const userTechnologyDataDTO = Technologies.add(username, technologyData);
+        res.status(201).json(userTechnologyDataDTO);
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: "Erro no servidor." });
@@ -36,10 +28,31 @@ class TechnologyController {
 
   public async update(req: Request, res: Response) {
     try {
-        const technologyId = req.params.id;
-        const technologyData = req.body;
-        const technologyDataDTO = Technologies.setTechnology(technologyId, technologyData);
-        res.status(200).json(technologyDataDTO);
+        const username = req.header("username") ?? "";
+        const { id } = req.params;
+        const newTechnologyData = req.body;
+        if(Technologies.exists(username, id)) {
+            const technologyDTO = Technologies.setTechnology(username, id, newTechnologyData);
+            res.status(200).json(technologyDTO);
+        } else {
+            res.status(404).json({ error: "Esta tecnologia não existe." });
+        }
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro no servidor. "});
+    }
+  }
+
+  public async markTechnologyAsStudied(req: Request, res: Response) {
+    try {
+        const username = req.header("username") ?? "";
+        const { id } = req.params;
+        if(Technologies.exists(username, id)) {
+            const technologyDTO = Technologies.markAsStudied(username, id);
+            res.status(200).json(technologyDTO);
+        } else {
+            res.status(404).json({ error: "Esta tecnologia não existe." });
+        }
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: "Erro no servidor. "});
@@ -48,9 +61,14 @@ class TechnologyController {
 
   public async remove(req: Request, res: Response) {
     try {
-        const { userId } = req.headers;
-        User.delete(userId);
-        res.status(200).send("Usuário deletado com sucesso.");
+        const username = req.header("useraname") ?? "";
+        const { id } = req.params;
+        if(Technologies.exists(username, id)) {
+            const remainingTechnologies = Technologies.delete(username, id);
+            res.status(200).json(remainingTechnologies);
+        } else {
+            res.status(404).json({ error: "Esta tecnologia não existe." });
+        }
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: "Erro no servidor. "});
