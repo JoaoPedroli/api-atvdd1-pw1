@@ -26,33 +26,6 @@ class UserController {
 			res.status(500).json({ error: "Erro no servidor." });
 		}
 	}
-
-	public async update(req: Request, res: Response) {
-		try {
-			const { userId } = req.headers;
-			const userData = req.body;
-			if (User.exists(userData.username)) {
-				const userDataDTO = User.setUser(userId, userData);
-				res.status(200).json(userDataDTO);
-			} else {
-				res.status(400).send("Este usuário nao existe.");
-			}
-		} catch (error) {
-			console.error(error);
-			res.status(500).json({ error: "Erro no servidor. " });
-		}
-	}
-
-	public async delete(req: Request, res: Response) {
-		try {
-			const { userId } = req.headers;
-			User.delete(userId);
-			res.status(200).send("Usuário deletado com sucesso.");
-		} catch (error) {
-			console.error(error);
-			res.status(500).json({ error: "Erro no servidor. " });
-		}
-	}
 }
 
 export default new UserController();

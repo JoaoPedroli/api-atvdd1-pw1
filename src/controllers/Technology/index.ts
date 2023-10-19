@@ -46,7 +46,7 @@ class TechnologyController {
     }
   }
 
-  public async delete(req: Request, res: Response) {
+  public async remove(req: Request, res: Response) {
     try {
         const { userId } = req.headers;
         User.delete(userId);

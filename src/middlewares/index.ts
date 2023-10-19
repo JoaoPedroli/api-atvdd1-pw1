@@ -8,7 +8,7 @@ export const checkExistsUserAccount = async (
 ) => {
   try {
     const username = req.header("username") ?? "";
-    if (User.existsByUsername(username)) {
+    if (User.exists(username)) {
       next();
     } else {
       res.status(404).send(`O username ${username} não foi encontrado`);
